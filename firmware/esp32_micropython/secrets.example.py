@@ -1,0 +1,5 @@
+WIFI_SSID = "your-wifi-ssid"
+WIFI_PASSWORD = "your-wifi-password"
+MQTT_BROKER = "broker.emqx.io"
+MQTT_CLIENT_ID = "sensor01"
+MQTT_TOPIC = "city/taipei/wenshan/sensor01/pm25"
