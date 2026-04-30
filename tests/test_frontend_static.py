@@ -11,17 +11,17 @@ class FrontendStaticTests(unittest.TestCase):
         self.assertTrue((WEB_DIR / "static" / "styles.css").exists())
         self.assertTrue((WEB_DIR / "static" / "app.js").exists())
 
-    def test_retro_design_signatures_are_present(self) -> None:
+    def test_corporate_trust_design_signatures_are_present(self) -> None:
         html = (WEB_DIR / "index.html").read_text(encoding="utf-8")
         css = (WEB_DIR / "static" / "styles.css").read_text(encoding="utf-8")
 
-        self.assertIn("marquee-track", html)
-        self.assertIn("rainbow-text", html)
-        self.assertIn("hit-counter", html)
-        self.assertIn("construction-zone", html)
-        self.assertIn("@keyframes rainbow", css)
-        self.assertIn("border-radius: 0", css)
-        self.assertIn("repeating-linear-gradient", css)
+        self.assertIn("gradient-text", html)
+        self.assertIn("isometric-card", html)
+        self.assertIn("source-strip", html)
+        self.assertIn("language-buttons", html)
+        self.assertIn("--gradient", css)
+        self.assertIn("box-shadow: var(--shadow-card)", css)
+        self.assertIn("border-radius: 1rem", css)
 
 
 if __name__ == "__main__":

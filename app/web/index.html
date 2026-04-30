@@ -3,221 +3,252 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>AirFusion AI Control Panel</title>
+    <title>AirFusion AI Control Center</title>
     <link rel="stylesheet" href="/static/styles.css" />
   </head>
   <body>
     <a class="skip-link" href="#sensor-form">Skip to sensor form</a>
 
-    <header class="site-header" aria-label="AirFusion AI header">
-      <div class="marquee" aria-hidden="true">
-        <div class="marquee-track">
-          <span class="marquee-red">*** AIR QUALITY LIVE ***</span>
-          <span class="marquee-blue">AIRBOX ONLINE</span>
-          <span class="marquee-green">CWA WEATHER LINKED</span>
-          <span class="marquee-yellow">MOENV AQI READY</span>
-          <span class="marquee-red">OPENAI ADVISOR ACTIVE</span>
-          <span class="marquee-blue">SELECT LANGUAGE BELOW</span>
-          <span class="marquee-green">AIRBOX ONLINE</span>
-          <span class="marquee-yellow">MOENV AQI READY</span>
-        </div>
-      </div>
+    <header class="topbar" aria-label="AirFusion navigation">
+      <a class="brand" href="/">
+        <span class="brand-mark" aria-hidden="true">AF</span>
+        <span>AirFusion AI</span>
+      </a>
+      <nav class="topnav" aria-label="Primary navigation">
+        <a href="#sensor-form" data-i18n="navSensor">Sensor</a>
+        <a href="#live-sources" data-i18n="navSources">Live sources</a>
+        <a href="/docs" data-i18n="openDocs">API docs</a>
+      </nav>
     </header>
 
-    <main class="page-shell">
-      <section class="hero window window-deep">
-        <div class="title-bar">
-          <span>AirFusion_AI.EXE</span>
-          <div class="window-controls" aria-hidden="true">
-            <span></span><span></span><span></span>
+    <main>
+      <section class="hero-section">
+        <div class="hero-copy-block">
+          <p class="eyebrow" data-i18n="eyebrow">Enterprise air intelligence</p>
+          <h1>
+            <span data-i18n="headlinePlain">Trusted air quality guidance,</span>
+            <span class="gradient-text" data-i18n="headlineGradient">translated instantly.</span>
+          </h1>
+          <p class="hero-copy" data-i18n="heroCopy">
+            Fuse local sensor readings with live AirBox, CWA weather, MOENV AQI, and OpenAI analysis in one polished control center.
+          </p>
+          <div class="hero-actions">
+            <a class="btn btn-primary" href="#sensor-form" data-i18n="startAnalysis">Start analysis</a>
+            <a class="btn btn-secondary" href="/docs" data-i18n="viewApi">View API</a>
+          </div>
+          <div class="language-card" aria-label="Output language selector">
+            <span class="language-label" data-i18n="languageLabel">Output language</span>
+            <div class="language-buttons" role="group" aria-label="Select output language">
+              <button class="lang-btn is-active" type="button" data-language="zh-Hant">繁中</button>
+              <button class="lang-btn" type="button" data-language="en">English</button>
+              <button class="lang-btn" type="button" data-language="ko">한국어</button>
+              <button class="lang-btn" type="button" data-language="th">ไทย</button>
+              <button class="lang-btn" type="button" data-language="vi">Tiếng Việt</button>
+            </div>
           </div>
         </div>
-        <div class="hero-content">
-          <div class="hero-main">
-            <p class="eyebrow" data-i18n="eyebrow">Windows 95 Environmental Command Center</p>
-            <h1 class="rainbow-text">AirFusion AI</h1>
-            <p class="hero-copy" data-i18n="heroCopy">
-              Local sensor data meets live AirBox, CWA weather, MOENV AQI, and OpenAI guidance.
-            </p>
-            <div class="language-panel" aria-label="language selector">
-              <span class="language-label" data-i18n="languageLabel">Output language</span>
-              <div class="language-buttons" role="group" aria-label="Select output language">
-                <button class="btn lang-btn is-active" type="button" data-language="zh-Hant">繁中</button>
-                <button class="btn lang-btn" type="button" data-language="en">EN</button>
-                <button class="btn lang-btn" type="button" data-language="ko">한국어</button>
-                <button class="btn lang-btn" type="button" data-language="th">ไทย</button>
-                <button class="btn lang-btn" type="button" data-language="vi">Tiếng Việt</button>
+
+        <aside class="hero-visual" aria-label="Live system summary">
+          <div class="isometric-card">
+            <div class="visual-header">
+              <span class="status-dot"></span>
+              <span data-i18n="liveFusion">Live fusion online</span>
+            </div>
+            <div class="metric-grid">
+              <div class="metric-card">
+                <span class="metric-label">AirBox</span>
+                <strong id="hero-airbox">Live</strong>
+              </div>
+              <div class="metric-card">
+                <span class="metric-label">MOENV</span>
+                <strong id="hero-moenv">AQI</strong>
+              </div>
+              <div class="metric-card">
+                <span class="metric-label">CWA</span>
+                <strong id="hero-cwa">Weather</strong>
+              </div>
+              <div class="metric-card">
+                <span class="metric-label">OpenAI</span>
+                <strong id="counter-language">ZH</strong>
               </div>
             </div>
+            <div class="mini-chart" aria-hidden="true">
+              <span style="height: 42%"></span>
+              <span style="height: 68%"></span>
+              <span style="height: 50%"></span>
+              <span style="height: 78%"></span>
+              <span style="height: 58%"></span>
+            </div>
           </div>
-          <aside class="hit-counter" aria-label="system status">
-            <div>VISITORS: 0001997</div>
-            <div>LANG: <span id="counter-language">ZH-HANT</span></div>
-            <div>MODE: LIVE FUSION</div>
-            <div>STATUS: READY</div>
-          </aside>
-        </div>
+        </aside>
       </section>
 
-      <hr class="hr-groove" />
-
-      <section class="source-strip" aria-label="live data source status">
-        <div class="source-tile">
-          <strong>LOCAL</strong>
-          <span data-i18n="localTile">Form sensor simulation</span>
-        </div>
-        <div class="source-tile source-live">
-          <strong>AIRBOX</strong>
-          <span data-i18n="airboxTile">Live nearest station</span>
-        </div>
-        <div class="source-tile source-live">
-          <strong>CWA</strong>
-          <span data-i18n="cwaTile">Live weather station</span>
-        </div>
-        <div class="source-tile source-live">
-          <strong>MOENV</strong>
-          <span data-i18n="moenvTile">Live official AQI</span>
-        </div>
+      <section id="live-sources" class="source-strip" aria-label="Live data source status">
+        <article class="source-tile">
+          <div class="source-icon">01</div>
+          <div>
+            <strong>Local</strong>
+            <span data-i18n="localTile">Form sensor simulation</span>
+          </div>
+        </article>
+        <article class="source-tile source-live">
+          <div class="source-icon">02</div>
+          <div>
+            <strong>AirBox</strong>
+            <span data-i18n="airboxTile">Live nearest station</span>
+          </div>
+        </article>
+        <article class="source-tile source-live">
+          <div class="source-icon">03</div>
+          <div>
+            <strong>CWA</strong>
+            <span data-i18n="cwaTile">Live weather observation</span>
+          </div>
+        </article>
+        <article class="source-tile source-live">
+          <div class="source-icon">04</div>
+          <div>
+            <strong>MOENV</strong>
+            <span data-i18n="moenvTile">Live official AQI</span>
+          </div>
+        </article>
       </section>
 
-      <section class="dashboard-grid" aria-label="sensor testing dashboard">
-        <form id="sensor-form" class="window panel-form" autocomplete="off">
-          <div class="title-bar">
-            <span data-i18n="formTitle">Local Sensor Report</span>
-            <span class="badge-new">NEW!</span>
+      <section class="workspace-grid" aria-label="Air quality workspace">
+        <form id="sensor-form" class="panel input-panel" autocomplete="off">
+          <div class="panel-header">
+            <div>
+              <p class="section-kicker" data-i18n="formKicker">Local input</p>
+              <h2 data-i18n="formTitle">Sensor report</h2>
+            </div>
+            <span class="pill" data-i18n="simulationBadge">Simulation</span>
           </div>
-          <div class="window-body">
-            <div class="form-grid compact-grid">
-              <label>
-                <span data-i18n="deviceId">Device ID</span>
-                <input class="field" name="device_id" value="arduino-sensor01" />
-              </label>
-              <label>
-                <span data-i18n="locationLabel">Location Label</span>
-                <input class="field" name="location_label" value="Taipei Wenshan" />
-              </label>
-              <label>
-                <span data-i18n="latitude">Latitude</span>
-                <input class="field" name="lat" type="number" step="0.000001" value="24.996222" />
-              </label>
-              <label>
-                <span data-i18n="longitude">Longitude</span>
-                <input class="field" name="lon" type="number" step="0.000001" value="121.576211" />
-              </label>
-              <label>
-                <span>PM2.5</span>
-                <input class="field field-big" name="pm25" type="number" step="0.1" value="45" required />
-              </label>
-              <label>
-                <span>PM10</span>
-                <input class="field field-big" name="pm10" type="number" step="0.1" value="60" />
-              </label>
-              <label>
-                <span data-i18n="temperature">Temperature</span>
-                <input class="field" name="temperature" type="number" step="0.1" value="27" />
-              </label>
-              <label>
-                <span data-i18n="humidity">Humidity</span>
-                <input class="field" name="humidity" type="number" step="0.1" value="60" />
-              </label>
-            </div>
-            <div class="live-note" data-i18n="liveNote">
-              AirBox, CWA weather, and MOENV AQI are live. This form only simulates the local sensor.
-            </div>
 
-            <div class="button-row">
-              <button class="btn btn-primary" type="submit" data-i18n="sendReport">Send Report</button>
-              <button class="btn" type="button" data-preset="indoor" data-i18n="indoorPreset">Indoor Source</button>
-              <button class="btn" type="button" data-preset="hotspot" data-i18n="hotspotPreset">High Local PM2.5</button>
-              <button class="btn btn-danger" type="reset" data-i18n="reset">Reset</button>
-            </div>
+          <div class="form-grid">
+            <label>
+              <span data-i18n="deviceId">Device ID</span>
+              <input class="field" name="device_id" value="arduino-sensor01" />
+            </label>
+            <label>
+              <span data-i18n="locationLabel">Location label</span>
+              <input class="field" name="location_label" value="Taipei Wenshan" />
+            </label>
+            <label>
+              <span data-i18n="latitude">Latitude</span>
+              <input class="field" name="lat" type="number" step="0.000001" value="24.996222" />
+            </label>
+            <label>
+              <span data-i18n="longitude">Longitude</span>
+              <input class="field" name="lon" type="number" step="0.000001" value="121.576211" />
+            </label>
+            <label>
+              <span>PM2.5</span>
+              <input class="field field-emphasis" name="pm25" type="number" step="0.1" value="45" required />
+            </label>
+            <label>
+              <span>PM10</span>
+              <input class="field field-emphasis" name="pm10" type="number" step="0.1" value="60" />
+            </label>
+            <label>
+              <span data-i18n="temperature">Temperature</span>
+              <input class="field" name="temperature" type="number" step="0.1" value="27" />
+            </label>
+            <label>
+              <span data-i18n="humidity">Humidity</span>
+              <input class="field" name="humidity" type="number" step="0.1" value="60" />
+            </label>
+          </div>
+
+          <p class="live-note" data-i18n="liveNote">
+            AirBox, CWA weather, and MOENV AQI are live. This form only simulates the local sensor.
+          </p>
+
+          <div class="button-row">
+            <button class="btn btn-primary" type="submit" data-i18n="sendReport">Send report</button>
+            <button class="btn btn-secondary" type="button" data-preset="indoor" data-i18n="indoorPreset">Indoor source</button>
+            <button class="btn btn-secondary" type="button" data-preset="hotspot" data-i18n="hotspotPreset">High PM2.5</button>
+            <button class="btn btn-ghost" type="reset" data-i18n="reset">Reset</button>
           </div>
         </form>
 
-        <section class="window result-window" aria-labelledby="result-title">
-          <div class="title-bar">
-            <span id="result-title" data-i18n="outputTitle">User Message Output</span>
-          </div>
-          <div class="window-body panel-yellow">
-            <div class="status-strip">
+        <section class="panel result-panel" aria-labelledby="result-title">
+          <div class="panel-header">
+            <div>
+              <p class="section-kicker" data-i18n="outputKicker">Advisor</p>
+              <h2 id="result-title" data-i18n="outputTitle">User message</h2>
+            </div>
+            <div class="status-pill">
               <span id="connection-light" class="status-light"></span>
               <span id="connection-text" data-i18n="waiting">Waiting for report...</span>
             </div>
-            <output id="user-message" class="message-box" aria-live="polite" data-i18n="placeholder">
-              Press SEND REPORT to generate the user-facing air quality message.
-            </output>
-            <div class="result-table" role="table" aria-label="analysis details">
-              <div role="row">
-                <strong role="cell" data-i18n="scenario">Scenario</strong>
-                <span id="scenario-cell" role="cell">---</span>
-              </div>
-              <div role="row">
-                <strong role="cell" data-i18n="confidence">Confidence</strong>
-                <span id="confidence-cell" role="cell">---</span>
-              </div>
-              <div role="row">
-                <strong role="cell" data-i18n="source">Source</strong>
-                <span id="source-cell" role="cell">---</span>
-              </div>
-              <div role="row">
-                <strong role="cell">AirBox</strong>
-                <span id="airbox-cell" role="cell">---</span>
-              </div>
-              <div role="row">
-                <strong role="cell" data-i18n="officialAqi">Official AQI</strong>
-                <span id="regional-cell" role="cell">---</span>
-              </div>
-              <div role="row">
-                <strong role="cell" data-i18n="weather">Weather</strong>
-                <span id="weather-cell" role="cell">---</span>
-              </div>
-              <div role="row">
-                <strong role="cell" data-i18n="wind">Wind</strong>
-                <span id="wind-cell" role="cell">---</span>
-              </div>
+          </div>
+
+          <output id="user-message" class="message-box" aria-live="polite" data-i18n="placeholder">
+            Press Send report to generate the user-facing air quality message.
+          </output>
+
+          <div class="result-table" role="table" aria-label="Analysis details">
+            <div role="row">
+              <strong role="cell" data-i18n="scenario">Scenario</strong>
+              <span id="scenario-cell" role="cell">---</span>
+            </div>
+            <div role="row">
+              <strong role="cell" data-i18n="confidence">Confidence</strong>
+              <span id="confidence-cell" role="cell">---</span>
+            </div>
+            <div role="row">
+              <strong role="cell" data-i18n="source">Source</strong>
+              <span id="source-cell" role="cell">---</span>
+            </div>
+            <div role="row">
+              <strong role="cell">AirBox</strong>
+              <span id="airbox-cell" role="cell">---</span>
+            </div>
+            <div role="row">
+              <strong role="cell" data-i18n="officialAqi">Official AQI</strong>
+              <span id="regional-cell" role="cell">---</span>
+            </div>
+            <div role="row">
+              <strong role="cell" data-i18n="weather">Weather</strong>
+              <span id="weather-cell" role="cell">---</span>
+            </div>
+            <div role="row">
+              <strong role="cell" data-i18n="wind">Wind</strong>
+              <span id="wind-cell" role="cell">---</span>
             </div>
           </div>
         </section>
       </section>
 
-      <hr class="hr-groove" />
-
-      <section class="info-grid" aria-label="system architecture">
-        <article class="window">
-          <div class="title-bar" data-i18n="fusionTitle">Fusion Layers</div>
-          <div class="table-like">
-            <div><strong>LOCAL</strong><span data-i18n="localLayer">Sensor simulation now, Arduino later</span></div>
-            <div><strong>NEIGHBOR</strong><span data-i18n="airboxLayer">Live AirBox station</span></div>
-            <div><strong>REGIONAL</strong><span data-i18n="regionalLayer">MOENV AQI + CWA weather</span></div>
-            <div><strong>OUTPUT</strong><span data-i18n="outputLayer">OpenAI multilingual advice</span></div>
+      <section class="insight-grid" aria-label="System architecture">
+        <article class="panel small-panel">
+          <p class="section-kicker" data-i18n="fusionKicker">Architecture</p>
+          <h2 data-i18n="fusionTitle">Fusion layers</h2>
+          <div class="layer-list">
+            <div><strong>Local</strong><span data-i18n="localLayer">Sensor simulation now, Arduino later</span></div>
+            <div><strong>Neighborhood</strong><span data-i18n="airboxLayer">Live AirBox station</span></div>
+            <div><strong>Regional</strong><span data-i18n="regionalLayer">MOENV AQI + CWA weather</span></div>
+            <div><strong>Output</strong><span data-i18n="outputLayer">OpenAI multilingual advice</span></div>
           </div>
         </article>
 
-        <article class="window">
-          <div class="title-bar" data-i18n="languageTitle">Language Switch Board</div>
-          <div class="color-grid" aria-hidden="true">
-            <span class="c-red"></span><span class="c-green"></span><span class="c-blue"></span>
-            <span class="c-yellow"></span><span class="c-magenta"></span><span class="c-cyan"></span>
-            <span class="c-navy"></span><span class="c-gray"></span><span class="c-white"></span>
-          </div>
-          <p class="tiny-note" data-i18n="languageNote">
+        <article class="panel small-panel isometric-lite">
+          <p class="section-kicker" data-i18n="languageKicker">Translation</p>
+          <h2 data-i18n="languageTitle">Language switchboard</h2>
+          <p data-i18n="languageNote">
             Choose a language, then send a report. The UI changes instantly; OpenAI replies in that language.
           </p>
+          <div class="language-summary">
+            <span>繁中</span><span>EN</span><span>한국어</span><span>ไทย</span><span>VI</span>
+          </div>
         </article>
       </section>
-
-      <section class="construction-zone">
-        <div class="window cta-window">
-          <div class="title-bar" data-i18n="constructionTitle">Live System, Retro Skin</div>
-          <div class="window-body">
-            <p data-i18n="constructionCopy">
-              AirBox, CWA, MOENV, and OpenAI are live. Connect Arduino later by posting to /sensor/report.
-            </p>
-            <a class="classic-link" href="/docs" data-i18n="openDocs">Open API Docs</a>
-          </div>
-        </div>
-      </section>
     </main>
+
+    <footer class="footer">
+      <span data-i18n="footerCopy">Live system: AirBox + CWA + MOENV + OpenAI.</span>
+      <a href="/docs" data-i18n="openDocs">API docs</a>
+    </footer>
 
     <script src="/static/app.js"></script>
   </body>
