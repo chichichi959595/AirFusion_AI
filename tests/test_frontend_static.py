@@ -16,12 +16,13 @@ class FrontendStaticTests(unittest.TestCase):
         css = (WEB_DIR / "static" / "styles.css").read_text(encoding="utf-8")
 
         self.assertIn("gradient-text", html)
-        self.assertIn("isometric-card", html)
-        self.assertIn("source-strip", html)
-        self.assertIn("language-buttons", html)
+        self.assertIn("language-select", html)
+        self.assertNotIn("Language switchboard", html)
+        self.assertNotIn('href="/docs"', html)
         self.assertIn("--gradient", css)
         self.assertIn("box-shadow: var(--shadow-card)", css)
         self.assertIn("border-radius: 1rem", css)
+        self.assertIn("overflow-wrap: anywhere", css)
 
 
 if __name__ == "__main__":
