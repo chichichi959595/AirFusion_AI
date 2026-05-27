@@ -11,6 +11,7 @@ from app.providers.moenv import MoenvProvider
 from app.schemas.air_quality import (
     AnalysisRequest,
     AnalysisResponse,
+    SensorLatestResponse,
     SensorReportRequest,
     SensorReportResponse,
 )
@@ -24,11 +25,21 @@ fusion_service = FusionService()
 advisor_service = AdvisorService()
 settings = get_settings()
 logger = logging.getLogger(__name__)
+latest_sensor_report: SensorReportResponse | None = None
 
 
 @router.get("/health")
 def health() -> dict[str, str]:
     return {"status": "ok", "service": "airfusion-ai"}
+
+
+@router.get("/sensor/latest", response_model=SensorLatestResponse)
+def get_latest_sensor_report() -> SensorLatestResponse:
+    return SensorLatestResponse(
+        ok=True,
+        has_report=latest_sensor_report is not None,
+        report=latest_sensor_report,
+    )
 
 
 @router.post("/analyze", response_model=AnalysisResponse)
@@ -47,6 +58,7 @@ async def analyze_air_quality(payload: AnalysisRequest) -> AnalysisResponse:
 
 @router.post("/sensor/report", response_model=SensorReportResponse)
 async def create_sensor_report(payload: SensorReportRequest) -> SensorReportResponse:
+    global latest_sensor_report
     location = Location(payload.lat, payload.lon, payload.location_label)
     local = AirReading(
         source=payload.device_id,
@@ -68,11 +80,16 @@ async def create_sensor_report(payload: SensorReportRequest) -> SensorReportResp
     )
     prompt = build_air_quality_prompt(result, language=payload.language)
     message, source = await advisor_service.create_user_message(result, prompt, language=payload.language)
-    return SensorReportResponse(
+    response = SensorReportResponse(
         ok=True,
         message=message,
         message_source=source,
         language=payload.language,
+        device_id=payload.device_id,
+        local_pm25=local.pm25,
+        local_pm10=local.pm10,
+        local_temperature=local.temperature,
+        local_humidity=local.humidity,
         neighborhood_source=neighborhood.source if neighborhood else None,
         neighborhood_station=neighborhood.location.label if neighborhood and neighborhood.location else None,
         neighborhood_distance_km=neighborhood.distance_km if neighborhood else None,
@@ -97,6 +114,8 @@ async def create_sensor_report(payload: SensorReportRequest) -> SensorReportResp
         recommendations=result.recommendations,
         llm_prompt=prompt,
     )
+    latest_sensor_report = response
+    return response
 
 
 async def _load_neighborhood_air_quality(

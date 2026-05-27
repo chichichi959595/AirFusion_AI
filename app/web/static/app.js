@@ -16,9 +16,16 @@ const heroAirbox = $("#hero-airbox");
 const heroMoenv = $("#hero-moenv");
 const heroCwa = $("#hero-cwa");
 const projectTextType = $("#project-text-type");
+const liveSensorLight = $("#live-sensor-light");
+const liveSensorStatus = $("#live-sensor-status");
+const livePm25 = $("#live-pm25");
+const livePm10 = $("#live-pm10");
+const liveTemperature = $("#live-temperature");
+const liveHumidity = $("#live-humidity");
 
 let selectedLanguage = "zh-Hant";
 let textTypeController = null;
+const LATEST_SENSOR_POLL_MS = 10000;
 
 const languageLabels = {
   "zh-Hant": "\u7e41\u4e2d",
@@ -230,6 +237,39 @@ function updateResult(result) {
   setText(heroCwa, result.wind_direction || "Weather");
 }
 
+function formatSensorValue(value, unit = "") {
+  if (value === null || value === undefined) return "---";
+  return `${value}${unit}`;
+}
+
+function updateLiveSensor(result) {
+  liveSensorLight?.classList.remove("error");
+  setText(liveSensorStatus, `${result.message_source || "---"} / ${result.scenario || "---"}`);
+  setText(livePm25, formatSensorValue(result.local_pm25, " ug/m3"));
+  setText(livePm10, formatSensorValue(result.local_pm10, " ug/m3"));
+  setText(liveTemperature, formatSensorValue(result.local_temperature, " C"));
+  setText(liveHumidity, formatSensorValue(result.local_humidity, "%"));
+}
+
+async function pollLatestSensorReport() {
+  try {
+    const response = await fetch("/sensor/latest", { cache: "no-store" });
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+    const latest = await response.json();
+    if (!latest.has_report || !latest.report) {
+      setText(liveSensorStatus, "Waiting for bridge...");
+      return;
+    }
+
+    updateResult(latest.report);
+    updateLiveSensor(latest.report);
+    setStatus("ok", `Arduino live / ${latest.report.message_source}`);
+  } catch (error) {
+    liveSensorLight?.classList.add("error");
+    setText(liveSensorStatus, "Live update unavailable");
+  }
+}
+
 async function submitReport() {
   setStatus(null, t("dialing"));
   if (messageBox) messageBox.dataset.empty = "false";
@@ -279,3 +319,5 @@ languageSelect?.addEventListener("change", () => applyLanguage(languageSelect.va
 if (messageBox) messageBox.dataset.empty = "true";
 if (connectionText) connectionText.dataset.state = "waiting";
 applyLanguage(selectedLanguage);
+pollLatestSensorReport();
+window.setInterval(pollLatestSensorReport, LATEST_SENSOR_POLL_MS);

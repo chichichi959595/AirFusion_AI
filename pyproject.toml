@@ -16,6 +16,7 @@ dependencies = [
   "pydantic>=2.7.0",
   "python-dotenv>=1.0.1",
   "paho-mqtt>=2.1.0",
+  "pyserial>=3.5",
 ]
 
 [project.optional-dependencies]

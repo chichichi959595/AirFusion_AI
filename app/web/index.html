@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>AirFusion AI Control Center</title>
-    <link rel="stylesheet" href="/static/styles.css?v=20260527-3" />
+    <link rel="stylesheet" href="/static/styles.css?v=20260527-live2" />
   </head>
   <body>
     <a class="skip-link" href="#sensor-form">Skip to sensor form</a>
@@ -26,6 +26,37 @@
       </section>
 
       <section class="workspace-grid" aria-label="Air quality workspace">
+        <section class="panel live-sensor-panel" aria-labelledby="live-sensor-title">
+          <div class="panel-header result-header">
+            <div>
+              <p class="section-kicker">Arduino Live</p>
+              <h2 id="live-sensor-title">PMS5003T</h2>
+            </div>
+            <div class="status-pill">
+              <span id="live-sensor-light" class="status-light"></span>
+              <span id="live-sensor-status">Waiting for bridge...</span>
+            </div>
+          </div>
+          <div class="live-sensor-grid">
+            <div>
+              <span>PM2.5</span>
+              <strong id="live-pm25">---</strong>
+            </div>
+            <div>
+              <span>PM10</span>
+              <strong id="live-pm10">---</strong>
+            </div>
+            <div>
+              <span data-i18n="temperature">Temperature</span>
+              <strong id="live-temperature">---</strong>
+            </div>
+            <div>
+              <span data-i18n="humidity">Humidity</span>
+              <strong id="live-humidity">---</strong>
+            </div>
+          </div>
+        </section>
+
         <form id="sensor-form" class="panel input-panel" autocomplete="off">
           <div class="panel-header">
             <div>
@@ -141,6 +172,6 @@
       </section>
     </main>
 
-    <script src="/static/app.js?v=20260527-3"></script>
+    <script src="/static/app.js?v=20260527-live2"></script>
   </body>
 </html>

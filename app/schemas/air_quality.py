@@ -142,6 +142,11 @@ class SensorReportResponse(BaseModel):
     message: str
     message_source: str
     language: SupportedLanguage
+    device_id: str | None = None
+    local_pm25: float | None = None
+    local_pm10: float | None = None
+    local_temperature: float | None = None
+    local_humidity: float | None = None
     neighborhood_source: str | None = None
     neighborhood_station: str | None = None
     neighborhood_distance_km: float | None = None
@@ -165,3 +170,9 @@ class SensorReportResponse(BaseModel):
     summary: str
     recommendations: list[str]
     llm_prompt: str
+
+
+class SensorLatestResponse(BaseModel):
+    ok: bool
+    has_report: bool
+    report: SensorReportResponse | None = None
