@@ -1,3 +1,5 @@
+import logging
+
 from fastapi import APIRouter
 
 from app.core.config import get_settings
@@ -21,6 +23,7 @@ router = APIRouter()
 fusion_service = FusionService()
 advisor_service = AdvisorService()
 settings = get_settings()
+logger = logging.getLogger(__name__)
 
 
 @router.get("/health")
@@ -104,8 +107,8 @@ async def _load_neighborhood_air_quality(
         live_neighborhood = await AirBoxProvider().nearest_reading(location, radius_km=10)
         if live_neighborhood:
             return live_neighborhood
-    except Exception:
-        pass
+    except Exception as exc:
+        logger.warning("AirBox provider failed: %s", exc)
 
     if payload.neighborhood_pm25 is not None:
         return AirReading(source="manual-airbox-fallback", pm25=payload.neighborhood_pm25)
@@ -120,8 +123,8 @@ async def _load_regional_air_quality(
         live_regional = await MoenvProvider(settings.moenv_api_key).nearest_reading(location)
         if live_regional:
             return live_regional
-    except Exception:
-        pass
+    except Exception as exc:
+        logger.warning("MOENV provider failed: %s", exc)
 
     if payload.regional_pm25 is not None or payload.regional_aqi is not None:
         return AirReading(
@@ -140,8 +143,8 @@ async def _load_weather(
         live_weather = await CwaProvider(settings.cwa_api_key).current_weather_nearest(location)
         if live_weather:
             return live_weather
-    except Exception:
-        pass
+    except Exception as exc:
+        logger.warning("CWA provider failed: %s", exc)
 
     if any(
         item is not None
