@@ -26,6 +26,7 @@ const liveHumidity = $("#live-humidity");
 let selectedLanguage = "zh-Hant";
 let textTypeController = null;
 const LATEST_SENSOR_POLL_MS = 10000;
+let latestReport = null;
 
 const languageLabels = {
   "zh-Hant": "\u7e41\u4e2d",
@@ -101,6 +102,105 @@ const translations = {
     crunching: "Thinking...",
     received: "Report received. Message source: ",
     failed: "Report failed.",
+  },
+  ko: {
+    typedTexts: ["AirFusion AI"],
+    heroCopy:
+      "PMS5003T 로컬 센서, AirBox 지역 데이터, MOENV 공식 AQI, CWA 날씨와 OpenAI 조언을 통합해 실시간 건강 조언을 제공합니다.",
+    languageLabel: "출력 언어",
+    formKicker: "로컬 입력",
+    formTitle: "센서 보고",
+    deviceId: "장치 ID",
+    locationLabel: "위치 이름",
+    latitude: "위도",
+    longitude: "경도",
+    temperature: "온도",
+    humidity: "습도",
+    liveNote: "AirBox, CWA 날씨, MOENV AQI는 실시간 데이터입니다. 이 양식은 로컬 센서만 시뮬레이션합니다.",
+    sendReport: "보고서 보내기",
+    indoorPreset: "실내 오염원",
+    hotspotPreset: "높은 PM2.5",
+    reset: "초기화",
+    outputKicker: "AI 조언",
+    outputTitle: "사용자 메시지",
+    waiting: "보고서를 기다리는 중...",
+    placeholder: "보고서 보내기를 누르면 사용자용 공기질 조언이 표시됩니다.",
+    scenario: "상황",
+    confidence: "신뢰도",
+    source: "출처",
+    officialAqi: "공식 AQI",
+    weather: "날씨",
+    wind: "바람",
+    dialing: "/sensor/report에 연결 중...",
+    crunching: "생각 중...",
+    received: "보고서를 받았습니다. 메시지 출처: ",
+    failed: "보고서 전송 실패.",
+  },
+  th: {
+    typedTexts: ["AirFusion AI"],
+    heroCopy:
+      "รวมข้อมูลจากเซนเซอร์ PMS5003T, AirBox, AQI ทางการจาก MOENV, สภาพอากาศ CWA และคำแนะนำจาก OpenAI เพื่อให้คำแนะนำสุขภาพแบบเรียลไทม์",
+    languageLabel: "ภาษาที่แสดงผล",
+    formKicker: "ข้อมูลจากพื้นที่",
+    formTitle: "รายงานเซนเซอร์",
+    deviceId: "รหัสอุปกรณ์",
+    locationLabel: "ชื่อสถานที่",
+    latitude: "ละติจูด",
+    longitude: "ลองจิจูด",
+    temperature: "อุณหภูมิ",
+    humidity: "ความชื้น",
+    liveNote: "AirBox, สภาพอากาศ CWA และ AQI จาก MOENV เป็นข้อมูลสด แบบฟอร์มนี้จำลองเฉพาะเซนเซอร์ท้องถิ่น",
+    sendReport: "ส่งรายงาน",
+    indoorPreset: "แหล่งกำเนิดในอาคาร",
+    hotspotPreset: "PM2.5 สูง",
+    reset: "รีเซ็ต",
+    outputKicker: "คำแนะนำ AI",
+    outputTitle: "ข้อความสำหรับผู้ใช้",
+    waiting: "กำลังรอรายงาน...",
+    placeholder: "กดส่งรายงานเพื่อสร้างคำแนะนำคุณภาพอากาศสำหรับผู้ใช้",
+    scenario: "สถานการณ์",
+    confidence: "ความมั่นใจ",
+    source: "แหล่งที่มา",
+    officialAqi: "AQI ทางการ",
+    weather: "สภาพอากาศ",
+    wind: "ลม",
+    dialing: "กำลังเชื่อมต่อ /sensor/report...",
+    crunching: "กำลังคิด...",
+    received: "ได้รับรายงานแล้ว แหล่งข้อความ: ",
+    failed: "ส่งรายงานไม่สำเร็จ",
+  },
+  vi: {
+    typedTexts: ["AirFusion AI"],
+    heroCopy:
+      "Kết hợp cảm biến PMS5003T, dữ liệu AirBox, AQI chính thức từ MOENV, thời tiết CWA và tư vấn OpenAI để tạo khuyến nghị sức khỏe theo thời gian thực.",
+    languageLabel: "Ngôn ngữ đầu ra",
+    formKicker: "Dữ liệu cục bộ",
+    formTitle: "Báo cáo cảm biến",
+    deviceId: "ID thiết bị",
+    locationLabel: "Tên vị trí",
+    latitude: "Vĩ độ",
+    longitude: "Kinh độ",
+    temperature: "Nhiệt độ",
+    humidity: "Độ ẩm",
+    liveNote: "Dữ liệu AirBox, CWA và MOENV là thực tế; biểu mẫu này chỉ mô phỏng cảm biến cục bộ.",
+    sendReport: "Gửi báo cáo",
+    indoorPreset: "Nguồn trong nhà",
+    hotspotPreset: "PM2.5 cao",
+    reset: "Đặt lại",
+    outputKicker: "Tư vấn AI",
+    outputTitle: "Thông điệp người dùng",
+    waiting: "Đang chờ báo cáo...",
+    placeholder: "Nhấn gửi báo cáo để tạo khuyến nghị chất lượng không khí cho người dùng.",
+    scenario: "Tình huống",
+    confidence: "Độ tin cậy",
+    source: "Nguồn",
+    officialAqi: "AQI chính thức",
+    weather: "Thời tiết",
+    wind: "Gió",
+    dialing: "Đang gọi /sensor/report...",
+    crunching: "Đang suy nghĩ...",
+    received: "Đã nhận báo cáo. Nguồn thông điệp: ",
+    failed: "Gửi báo cáo thất bại.",
   },
 };
 
@@ -198,6 +298,20 @@ function payloadFromForm() {
   };
 }
 
+function payloadFromReport(report) {
+  return {
+    language: selectedLanguage,
+    device_id: report.device_id || "arduino-uno-sensor01",
+    lat: numberOrNull(form?.elements.lat?.value) ?? 24.996222,
+    lon: numberOrNull(form?.elements.lon?.value) ?? 121.576211,
+    location_label: form?.elements.location_label?.value || "Taipei Wenshan",
+    pm25: report.local_pm25,
+    pm10: report.local_pm10,
+    temperature: report.local_temperature,
+    humidity: report.local_humidity,
+  };
+}
+
 function setStatus(kind, text, state = "") {
   connectionLight?.classList.remove("error");
   if (kind === "error") connectionLight?.classList.add("error");
@@ -251,6 +365,48 @@ function updateLiveSensor(result) {
   setText(liveHumidity, formatSensorValue(result.local_humidity, "%"));
 }
 
+function syncFormWithReport(result) {
+  if (!form) return;
+  const values = {
+    device_id: result.device_id,
+    pm25: result.local_pm25,
+    pm10: result.local_pm10,
+    temperature: result.local_temperature,
+    humidity: result.local_humidity,
+  };
+  Object.entries(values).forEach(([name, value]) => {
+    const field = form.elements[name];
+    if (field && value !== null && value !== undefined) field.value = value;
+  });
+}
+
+async function requestReport(payload) {
+  const response = await fetch("/sensor/report", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload),
+  });
+
+  if (!response.ok) {
+    const detail = await response.text();
+    throw new Error(detail || `HTTP ${response.status}`);
+  }
+
+  return response.json();
+}
+
+async function translateLatestReport() {
+  if (!latestReport) return;
+  setStatus(null, t("dialing"));
+  if (messageBox) messageBox.dataset.empty = "false";
+  setShimmer(messageBox, t("crunching"));
+  const result = await requestReport(payloadFromReport(latestReport));
+  latestReport = result;
+  updateResult(result);
+  updateLiveSensor(result);
+  setStatus("ok", `${t("received")}${result.message_source}`);
+}
+
 async function pollLatestSensorReport() {
   try {
     const response = await fetch("/sensor/latest", { cache: "no-store" });
@@ -261,9 +417,13 @@ async function pollLatestSensorReport() {
       return;
     }
 
-    updateResult(latest.report);
+    latestReport = latest.report;
+    syncFormWithReport(latest.report);
     updateLiveSensor(latest.report);
-    setStatus("ok", `Arduino live / ${latest.report.message_source}`);
+    if (latest.report.language === selectedLanguage) {
+      updateResult(latest.report);
+      setStatus("ok", `Arduino live / ${latest.report.message_source}`);
+    }
   } catch (error) {
     liveSensorLight?.classList.add("error");
     setText(liveSensorStatus, "Live update unavailable");
@@ -287,7 +447,9 @@ async function submitReport() {
   }
 
   const result = await response.json();
+  latestReport = result;
   updateResult(result);
+  updateLiveSensor(result);
   setStatus("ok", `${t("received")}${result.message_source}`);
 }
 
@@ -314,7 +476,15 @@ document.querySelectorAll("[data-preset]").forEach((button) => {
   });
 });
 
-languageSelect?.addEventListener("change", () => applyLanguage(languageSelect.value));
+languageSelect?.addEventListener("change", async () => {
+  applyLanguage(languageSelect.value);
+  try {
+    await translateLatestReport();
+  } catch (error) {
+    setStatus("error", t("failed"));
+    setText(messageBox, `SYSTEM ERROR: ${error.message}`);
+  }
+});
 
 if (messageBox) messageBox.dataset.empty = "true";
 if (connectionText) connectionText.dataset.state = "waiting";

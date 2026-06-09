@@ -15,7 +15,7 @@ class FrontendStaticTests(unittest.TestCase):
         html = (WEB_DIR / "index.html").read_text(encoding="utf-8")
         css = (WEB_DIR / "static" / "styles.css").read_text(encoding="utf-8")
 
-        self.assertIn("gradient-text", html)
+        self.assertIn("text-type", html)
         self.assertIn("language-select", html)
         self.assertNotIn("Language switchboard", html)
         self.assertNotIn('href="/docs"', html)
