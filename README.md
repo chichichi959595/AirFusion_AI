@@ -1,5 +1,7 @@
 # AI-Powered Air Quality Interpretation System
 
+Language: **English** | [繁體中文](README.zh-Hant.md)
+
 ## Project Description
 
 AI-Powered Air Quality Interpretation System, also called AirFusion AI, is a multi-source air quality analysis service that turns sensor readings into user-facing health advice.
@@ -91,7 +93,7 @@ Invoke-RestMethod -Method Post `
 
 The response includes the generated user message, message source, selected data sources, scenario, recommendations, and the structured LLM prompt.
 
-### Language Switching / 語言切換
+### Application Output Language Switching
 
 前端提供輸出語言切換功能，使用者可以在頁面右上方的 language selector 選擇回覆語言。目前支援：
 
