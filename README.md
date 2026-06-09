@@ -14,7 +14,7 @@ The project combines three levels of air quality and weather data:
 
 The system is important because a single PM2.5 number does not explain where pollution is coming from or what the user should do next. AirFusion AI compares local, neighborhood, regional, and weather conditions to identify likely pollution scenarios, estimate health risk, and generate clear recommendations in multiple languages.
 
-The main analytical methods are:
+## Main Methods
 
 - Haversine distance matching to select the nearest AirBox, MOENV, and CWA stations.
 - Rule-based scenario classification for indoor sources, neighborhood hotspots, regional pollution, official alerts, and normal conditions.
@@ -46,7 +46,7 @@ Edit `.env` and fill in the keys that are available:
 
 ```text
 OPENAI_API_KEY=your_openai_api_key
-OPENAI_MODEL=gpt-5.4-nano
+OPENAI_MODEL=gpt-4.1-nano
 MOENV_API_KEY=your_moenv_api_key
 CWA_API_KEY=your_cwa_api_key
 ```
@@ -95,17 +95,15 @@ The response includes the generated user message, message source, selected data 
 
 ### Application Output Language Switching
 
-前端提供輸出語言切換功能，使用者可以在頁面右上方的 language selector 選擇回覆語言。目前支援：
+The frontend language selector changes the output language for the UI and for the OpenAI request.
 
-- 繁體中文（`zh-Hant`）
-- English（`en`）
-- 한국어（`ko`）
-- ไทย（`th`）
-- Tiếng Việt（`vi`）
+- Traditional Chinese: `zh-Hant`
+- English: `en`
+- Korean: `ko`
+- Thai: `th`
+- Vietnamese: `vi`
 
-語言選擇會透過 API request 的 `language` 欄位送到後端。後端會在 `build_air_quality_prompt()` 中加入 `<target_language>`，並在 OpenAI instructions 中要求模型使用指定語言輸出。若 OpenAI 不可用，本地 rule-based fallback 也會依照語言參數產生對應語言的建議文字。
-
-在 Arduino live 模式下，前端會保留最新一筆感測資料。當使用者切換語言時，系統會用同一筆最新感測數據重新呼叫 `/sensor/report`，產生新的語言版本建議，不需要 Arduino 重新送出資料。
+The selected language is sent in the API request as `language`. `build_air_quality_prompt()` also sets `<target_language>` accordingly, and the OpenAI instructions tell the model to answer in the selected language. If OpenAI is unavailable, the rule-based fallback also uses the same language setting.
 
 ### Use Arduino Uno Serial Data
 
@@ -177,7 +175,8 @@ AirFusion_AI/
   tests/                         Unit tests for providers, fusion, geo, advisor, frontend
   .env.example                   Environment variable template
   pyproject.toml                 Python dependencies and project metadata
-  README.md                      Project overview and setup instructions
+  README.md                      English README
+  README.zh-Hant.md              Traditional Chinese README
 ```
 
 The main runtime flow is:
