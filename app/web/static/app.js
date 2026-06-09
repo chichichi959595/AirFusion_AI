@@ -218,11 +218,128 @@ function t(key) {
 }
 
 function setText(element, text) {
-  if (element) element.textContent = text;
+  if (!element) return;
+  element.classList.remove("markdown-body");
+  element.textContent = text;
+}
+
+function escapeHtml(value) {
+  return String(value ?? "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
+function renderInlineMarkdown(value) {
+  let html = escapeHtml(value);
+  html = html.replace(/`([^`]+)`/g, "<code>$1</code>");
+  html = html.replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>");
+  html = html.replace(/(^|[\s(])\*([^*\n]+)\*/g, "$1<em>$2</em>");
+  html = html.replace(
+    /\[([^\]]+)\]\((https?:\/\/[^)\s]+|mailto:[^)\s]+)\)/g,
+    '<a href="$2" target="_blank" rel="noopener noreferrer">$1</a>',
+  );
+  return html;
+}
+
+function flushParagraph(parts, blocks) {
+  if (!parts.length) return;
+  blocks.push(`<p>${renderInlineMarkdown(parts.join(" "))}</p>`);
+  parts.length = 0;
+}
+
+function flushList(listState, blocks) {
+  if (!listState.items.length) return;
+  const tag = listState.ordered ? "ol" : "ul";
+  const items = listState.items.map((item) => `<li>${renderInlineMarkdown(item)}</li>`).join("");
+  blocks.push(`<${tag}>${items}</${tag}>`);
+  listState.items = [];
+  listState.ordered = false;
+}
+
+function renderMarkdownToHtml(markdown) {
+  const lines = String(markdown ?? "").replace(/\r\n/g, "\n").split("\n");
+  const blocks = [];
+  const paragraph = [];
+  const listState = { ordered: false, items: [] };
+  let codeFence = null;
+  let codeLines = [];
+
+  lines.forEach((line) => {
+    const fenceMatch = line.match(/^```([\w-]*)\s*$/);
+    if (fenceMatch) {
+      if (codeFence !== null) {
+        blocks.push(`<pre><code>${escapeHtml(codeLines.join("\n"))}</code></pre>`);
+        codeFence = null;
+        codeLines = [];
+      } else {
+        flushParagraph(paragraph, blocks);
+        flushList(listState, blocks);
+        codeFence = fenceMatch[1] || "";
+      }
+      return;
+    }
+
+    if (codeFence !== null) {
+      codeLines.push(line);
+      return;
+    }
+
+    if (!line.trim()) {
+      flushParagraph(paragraph, blocks);
+      flushList(listState, blocks);
+      return;
+    }
+
+    const headingMatch = line.match(/^(#{1,3})\s+(.+)$/);
+    if (headingMatch) {
+      flushParagraph(paragraph, blocks);
+      flushList(listState, blocks);
+      const level = headingMatch[1].length;
+      blocks.push(`<h${level}>${renderInlineMarkdown(headingMatch[2])}</h${level}>`);
+      return;
+    }
+
+    const unorderedMatch = line.match(/^\s*[-*]\s+(.+)$/);
+    const orderedMatch = line.match(/^\s*\d+\.\s+(.+)$/);
+    if (unorderedMatch || orderedMatch) {
+      flushParagraph(paragraph, blocks);
+      const ordered = Boolean(orderedMatch);
+      if (listState.items.length && listState.ordered !== ordered) flushList(listState, blocks);
+      listState.ordered = ordered;
+      listState.items.push((unorderedMatch || orderedMatch)[1]);
+      return;
+    }
+
+    const quoteMatch = line.match(/^>\s?(.+)$/);
+    if (quoteMatch) {
+      flushParagraph(paragraph, blocks);
+      flushList(listState, blocks);
+      blocks.push(`<blockquote>${renderInlineMarkdown(quoteMatch[1])}</blockquote>`);
+      return;
+    }
+
+    flushList(listState, blocks);
+    paragraph.push(line.trim());
+  });
+
+  if (codeFence !== null) blocks.push(`<pre><code>${escapeHtml(codeLines.join("\n"))}</code></pre>`);
+  flushParagraph(paragraph, blocks);
+  flushList(listState, blocks);
+  return blocks.join("");
+}
+
+function renderMarkdown(element, markdown) {
+  if (!element) return;
+  element.classList.add("markdown-body");
+  element.innerHTML = renderMarkdownToHtml(markdown || "");
 }
 
 function setShimmer(element, text) {
   if (!element) return;
+  element.classList.remove("markdown-body");
   element.innerHTML = "";
   const span = document.createElement("span");
   span.className = "text-shimmer";
@@ -325,7 +442,7 @@ function formatKm(value) {
 
 function updateResult(result) {
   if (messageBox) messageBox.dataset.empty = "false";
-  setText(messageBox, result.message || "No message returned.");
+  renderMarkdown(messageBox, result.message || "No message returned.");
   setText(scenarioCell, result.scenario || "---");
   setText(confidenceCell, typeof result.confidence === "number" ? `${Math.round(result.confidence * 100)}%` : "---");
   setText(sourceCell, `${result.message_source || "---"} / ${languageLabels[result.language] || result.language}`);
