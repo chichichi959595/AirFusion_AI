@@ -35,7 +35,7 @@ The system is important because a single PM2.5 number does not explain where pol
 ### Installation
 
 ```powershell
-cd "C:\Users\Hayden Ho\Desktop\coding\AirFusion_AI"
+enter the project folder
 python -m venv .venv
 .\.venv\Scripts\Activate.ps1
 python -m pip install -e ".[dev]"
