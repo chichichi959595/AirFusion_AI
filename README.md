@@ -91,6 +91,20 @@ Invoke-RestMethod -Method Post `
 
 The response includes the generated user message, message source, selected data sources, scenario, recommendations, and the structured LLM prompt.
 
+### Language Switching / 語言切換
+
+前端提供輸出語言切換功能，使用者可以在頁面右上方的 language selector 選擇回覆語言。目前支援：
+
+- 繁體中文（`zh-Hant`）
+- English（`en`）
+- 한국어（`ko`）
+- ไทย（`th`）
+- Tiếng Việt（`vi`）
+
+語言選擇會透過 API request 的 `language` 欄位送到後端。後端會在 `build_air_quality_prompt()` 中加入 `<target_language>`，並在 OpenAI instructions 中要求模型使用指定語言輸出。若 OpenAI 不可用，本地 rule-based fallback 也會依照語言參數產生對應語言的建議文字。
+
+在 Arduino live 模式下，前端會保留最新一筆感測資料。當使用者切換語言時，系統會用同一筆最新感測數據重新呼叫 `/sensor/report`，產生新的語言版本建議，不需要 Arduino 重新送出資料。
+
 ### Use Arduino Uno Serial Data
 
 Arduino Uno does not have built-in Wi-Fi, so this project uses USB Serial plus a Python bridge.
@@ -237,6 +251,7 @@ The current project produces a working end-to-end prototype with these results:
 - Live provider integrations for AirBox/LASS, MOENV AQI, and CWA weather observations.
 - A rule-based fusion engine that classifies pollution scenarios and generates practical recommendations.
 - A structured OpenAI prompt pipeline with rule-based fallback when OpenAI is unavailable.
+- A frontend language switcher that regenerates the advice in Traditional Chinese, English, Korean, Thai, or Vietnamese.
 - Unit tests covering geographic distance, data providers, fusion logic, advisor fallback text, and frontend static files.
 
 The main conclusion is that combining local sensor readings with neighborhood, regional, and weather data creates more useful advice than showing a single PM2.5 value. The system can distinguish between likely indoor pollution, local neighborhood hotspots, broader regional pollution, and official AQI alerts.
